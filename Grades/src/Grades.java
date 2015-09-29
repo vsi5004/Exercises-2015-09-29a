@@ -1,5 +1,7 @@
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /*
  * Repeatedly prompt the user to enter a grade.
@@ -24,14 +26,50 @@ import java.util.Scanner;
  */
 public class Grades {
 
-  public static void main(String[] args) {
+    public static void main(String[] args) {
+        System.out.println("Please enter a series of grades ranging from 0 to 100. When finished, enter -1");
+        String input = null;
+        int grade = 0;
+        int gradeTotal = 0;
+        int gradeCounter = 0;
+        double gradeAverage = 0;
 
-    Scanner keyboard = new Scanner(System.in);
+        //loop runs until user enters the exit value as a grade
+        while (grade != -1) {
+            try {
+                System.out.print("Enter a grade: ");
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                input = bufferedReader.readLine();
+                grade = Integer.parseInt(input);
+                if (grade < 101 && grade > -1) {
+                    gradeCounter++;
+                    gradeTotal += grade;
+                } else if (grade != -1) {
+                    System.out.println("Error. Grade must be between 0 and 100; or -1 to finish.");
+                }
 
-    System.out.print("Enter a grade: ");
-    int grade = keyboard.nextInt();
-    System.out.println("You entered: " + grade);
+            } catch (NumberFormatException ex) {
+                System.out.println("Not a number !");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //takes average of all grades, rounds to two places
+        gradeAverage = round2((double) gradeTotal / gradeCounter);
+        //checks if there were actually any grades entered
+        if (gradeCounter == 0) {
+            System.out.println("You did not enter any grades, there is no average.");
+        } else {
+            System.out.println("You entered " + gradeCounter + " grades. The average is " + gradeAverage);
+        }
+    }
 
-  }
+    //rounds decimal number to two places
+    public static double round2(double value) {
+        double result = value * 100;
+        result = Math.round(result);
+        result = result / 100;
+        return result;
+    }
 
 }
